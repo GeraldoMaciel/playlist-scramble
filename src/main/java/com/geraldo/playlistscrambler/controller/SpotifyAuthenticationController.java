@@ -1,4 +1,4 @@
-package com.geraldo.playlistscrambler;
+package com.geraldo.playlistscrambler.controller;
 
 
 import com.wrapper.spotify.SpotifyApi;
