@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PlayList {
 
-    private String value;
+    private String id;
 
-    private String label;
+    private String name;
 }

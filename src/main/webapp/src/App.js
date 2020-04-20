@@ -20,42 +20,42 @@ class App extends Component {
         super(props);
 
         this.state = {
-         result: null,
-         selected: [],
+         initialList: null,
+         selectedList: [],
         };
 
-        this.setFetchedResult = this.setFetchedResult.bind(this);
-        this.fetchPlaylists = this.fetchPlaylists.bind(this);
+        this.setFetchedInitialList = this.setFetchedInitialList.bind(this);
+        this.fetchInitialList = this.fetchInitialList.bind(this);
         this.onChange = this.onChange.bind(this);
         this.generateRandomizedPlaylist = this.generateRandomizedPlaylist.bind(this);
         this.setRandomizedPlayList = this.setRandomizedPlayList.bind(this);
     }
 
-    onChange = (selected) => {
-            this.setState({ selected });
+    onChange = (selectedList) => {
+            this.setState({ selectedList });
         };
 
      componentDidMount() {
-         this.fetchPlaylists(this.props.token);
+         this.fetchInitialList();
      }
 
-     fetchPlaylists(token) {
-         axios(`${PATH_BASE}${PATH_FETCH_PLAY_LIST}?${PARAM_TOKEN}${token}`)
-         .then(result =>  this.setFetchedResult(result.data))
+     fetchInitialList() {
+         axios(`${PATH_BASE}${PATH_FETCH_PLAY_LIST}?${PARAM_TOKEN}${this.props.token}`)
+         .then(result =>  this.setFetchedInitialList(result.data))
          .catch(error => error);
      }
 
-      setFetchedResult(data){
-       this.setState({result: data});
+      setFetchedInitialList(data){
+       let initialList = data.map(({id,name}) =>  ({value: id, label: name}));
+       this.setState({initialList});
       }
 
       setRandomizedPlayList(data){
-        console.log(data);
         this.setState({randomizedPlayList: data});
      }
 
       generateRandomizedPlaylist(){
-        axios(`${PATH_BASE}${PATH_GENERATE_RANDOMIZED_PLAYLIST}?${PARAM_TOKEN}${this.props.token}&${PARAM_PLAYLISTARRAY}${this.state.selected}`)
+        axios(`${PATH_BASE}${PATH_GENERATE_RANDOMIZED_PLAYLIST}?${PARAM_TOKEN}${this.props.token}&${PARAM_PLAYLISTARRAY}${this.state.selectedList}`)
                  .then(result =>  this.setRandomizedPlayList(result.data))
                  .catch(error => error);
       }
@@ -64,15 +64,15 @@ class App extends Component {
 
 
     render() {
-        if (!this.state.result){
+        if (!this.state.initialList){
             return null;
         }
-        console.log(this.state);
+
          return (
 
          <div className="App"><Title/>
-         <div className="container"> <DualListBox options={this.state.result} selected={this.state.selected} onChange={this.onChange}/>
-         <button type="button" onClick={() => this.generateRandomizedPlaylist()}> Generate randomized playlist </button>
+         <div className="container"> <DualListBox options={this.state.initialList} selected={this.state.selectedList} onChange={this.onChange}/>
+         <button type="button" disabled={this.state.selectedList.length == 0} onClick={() => this.generateRandomizedPlaylist()}> Generate randomized playlist </button>
          </div> </div>
 
          );

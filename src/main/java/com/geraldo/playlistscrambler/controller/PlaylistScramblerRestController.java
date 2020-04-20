@@ -46,13 +46,6 @@ public class PlaylistScramblerRestController {
 
             playlistSimplifiedPaging = getListOfCurrentUsersPlaylistsRequest.execute();
 
-
-            System.out.println("Total: " + playlistSimplifiedPaging.getTotal());
-            System.out.println("Playlists:");
-            for (PlaylistSimplified p : playlistSimplifiedPaging.getItems()) {
-                System.out.println(p.getName());
-            }
-
             playListSet = Arrays.stream(playlistSimplifiedPaging.getItems()).map(pl -> new PlayList(pl.getId(), pl.getName())).collect(Collectors.toSet());
 
 
@@ -68,7 +61,7 @@ public class PlaylistScramblerRestController {
     @CrossOrigin
     public List<String> generateRandomizedPlaylist(@RequestParam String token, @RequestParam String[] playlistArray) throws IOException, SpotifyWebApiException {
 
-        System.out.println("Generating randomized playlist from playlists: " + playlistArray );
+        System.out.println("Generating randomized playlist from playlists: " + playlistArray);
         final int numberOfTracksOnRandomizedPlaylist = 10;
 
         List<PlaylistTrack[]> playlistList = new ArrayList<>();
@@ -82,12 +75,12 @@ public class PlaylistScramblerRestController {
         }
 
         Random random = new Random();
-        while (randomizedTrackList.size() < 10){
-            int randomPlayListIndex = random.nextInt(playlistList.size()-1);
+        while (randomizedTrackList.size() < 10) {
+            int randomPlayListIndex = random.nextInt(playlistList.size() - 1);
 
-            PlaylistTrack[] playlistTrackArray =  playlistList.get(randomPlayListIndex);
+            PlaylistTrack[] playlistTrackArray = playlistList.get(randomPlayListIndex);
 
-            int randomTrackIndex = random.nextInt(playlistTrackArray.length-1);
+            int randomTrackIndex = random.nextInt(playlistTrackArray.length - 1);
 
             System.out.println("Including track " + playlistTrackArray[randomTrackIndex].getTrack().getName());
 
